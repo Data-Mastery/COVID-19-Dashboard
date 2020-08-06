@@ -23,13 +23,25 @@
 
     <v-app-bar app clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-toolbar-title>Corona Dashboard</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-title>
+        <v-img :src="require(`@/assets/logo.png`)" contain height="100%" width="210px" />
+      </v-toolbar-title>
     </v-app-bar>
 
     <v-main>
       <v-container fluid>
         <v-row>
-          <v-col></v-col>
+          <v-col cols="12" sm="9">
+            <worldmap></worldmap>
+          </v-col>
+          <v-col cols="12" sm="3">
+            <overviewtable></overviewtable>
+          </v-col>
+          <v-col cols="12" sm="12">
+            <singleseries></singleseries>
+          </v-col>
         </v-row>
       </v-container>
     </v-main>
@@ -41,9 +53,18 @@
 </template>
 
 <script>
+import WorldMap from "./components/WorldMap";
+import OverviewTable from "./components/OverviewTable";
+import SingleSeries from "./components/SingleSeries";
+
 export default {
   props: {
     source: String
+  },
+  components: {
+    worldmap: WorldMap,
+    overviewtable: OverviewTable,
+    singleseries: SingleSeries
   },
   data: () => ({
     drawer: null
@@ -53,3 +74,5 @@ export default {
   }
 };
 </script>
+
+<style scoped></style>
