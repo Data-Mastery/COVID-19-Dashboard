@@ -27,15 +27,17 @@
         <v-row align="center" justify="center">
           <h2>Example for a VueJS Frontend with a R-Shiny Backend Server</h2>
         </v-row>
-        <v-row>
-          <worldmap></worldmap>
-          <v-col cols="12" sm="3">
-            <overviewtable></overviewtable>
-          </v-col>
-          <v-col cols="12" sm="12">
-            <singleseries></singleseries>
-          </v-col>
-        </v-row>
+        <transition name="fade" appear>
+          <v-row>
+            <worldmap></worldmap>
+            <v-col cols="12" sm="3">
+              <overviewtable></overviewtable>
+            </v-col>
+            <v-col cols="12" sm="12">
+              <singleseries></singleseries>
+            </v-col>
+          </v-row>
+        </transition>
       </v-container>
     </v-main>
 
@@ -76,4 +78,11 @@ export default {
 </script>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1.3s ease-in;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 </style>
