@@ -9,7 +9,7 @@ On the other hand, R provides awesome packages for data wrangling and reactity i
 
 ```
 git clone https://github.com/Data-Mastery/COVID-19-Dashboard.git
-cd COVID-19-Dashboard
+cd COVID-19-Dashboard/frontend
 npm install
 ```
 
