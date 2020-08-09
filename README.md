@@ -15,6 +15,7 @@ npm install
 
 ### Get Covid 19 data from Johns Hopkins
 ```
+cd .. # Back to root folder.
 git clone https://github.com/CSSEGISandData/COVID-19.git
 ```
 
