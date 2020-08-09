@@ -1,12 +1,9 @@
 <template>
   <v-card class="d-inline-block mx-auto" light>
     <v-data-table
-      v-model="selected"
-      :headers="headers"
-      :items="desserts"
-      item-key="name"
-      show-select
-      class="elevation-1"
+      :headers="chartData.headers"
+      :items="chartData.desserts"
+      v-if="this.$store.state.shrunk & this.isMounted"
     ></v-data-table>
   </v-card>
 </template>
@@ -14,63 +11,35 @@
 
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
-  data() {
+  mounted() {
+    this.isMounted = true;
+  },
+  data: function() {
     return {
-      singleSelect: false,
-      selected: [],
-      headers: [
-        {
-          text: "Dessert (100g serving)",
-          align: "start",
-          sortable: false,
-          value: "name"
-        },
-        { text: "Calories", value: "calories" }
-      ],
-      desserts: [
-        {
-          name: "Frozen Yogurt",
-          calories: 159
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237
-        },
-        {
-          name: "Eclair",
-          calories: 262
-        },
-        {
-          name: "Cupcake",
-          calories: 305
-        },
-        {
-          name: "Gingerbread",
-          calories: 356
-        },
-        {
-          name: "Jelly bean",
-          calories: 375
-        },
-        {
-          name: "Lollipop",
-          calories: 392
-        },
-        {
-          name: "Honeycomb",
-          calories: 408
-        },
-        {
-          name: "Donut",
-          calories: 452
-        },
-        {
-          name: "KitKat",
-          calories: 518
-        }
-      ]
+      isMounted: false
     };
+  },
+  computed: {
+    ...mapGetters(["restructureArr"]),
+    chartData() {
+      return {
+        singleSelect: false,
+        selected: [],
+        headers: [
+          {
+            text: "Cases by day",
+            align: "start",
+            sortable: false,
+            value: "name"
+          },
+          { text: "Date", value: "country" }
+        ],
+        desserts: this.restructureArr
+      };
+    }
   }
 };
 </script>

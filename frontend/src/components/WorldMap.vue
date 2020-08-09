@@ -1,22 +1,41 @@
 <template>
-  <v-card>
-    <highcharts
-      :constructorType="'mapChart'"
-      class="hc"
-      :options="chartOptions"
-      ref="chart"
-      v-if="isMounted"
-    ></highcharts>
-    <h3 v-if="this.hovervalue">{{this.hovervalue}}</h3>
-  </v-card>
+  <div
+    id="worldmap_div"
+    v-bind:style="divClass ? 'width: 75%; transition: width 0.3s ease;' : 'width: 100%;'"
+  >
+    <v-card>
+      <highcharts
+        :constructorType="'mapChart'"
+        class="hc"
+        :options="chartOptions"
+        ref="chart"
+        v-if="isMounted"
+      ></highcharts>
+      <h3 v-if="this.hovervalue">{{this.hovervalue}}</h3>
+    </v-card>
+  </div>
 </template>
 
 <script>
 import worldMap from "@highcharts/map-collection/custom/world.geo.json";
+import { mapState } from "vuex";
+import Highcharts from "highcharts";
 
 export default {
+  ...mapState(["lineData"]),
   mounted() {
+    const ref = this;
     this.isMounted = true;
+    this.$store.watch(state => {
+      if (state.lineData.data.length > 0) {
+        setTimeout(function() {
+          Highcharts.charts[0].reflow();
+          setTimeout(function() {
+            ref.$store.commit("updateShrunk", true);
+          }, 500);
+        }, 200);
+      }
+    });
   },
   data() {
     return {
@@ -25,6 +44,9 @@ export default {
     };
   },
   computed: {
+    divClass() {
+      return this.$store.state.lineData.data.length > 0;
+    },
     chartOptions() {
       var ref = this;
 
@@ -34,7 +56,7 @@ export default {
           height: "620px"
         },
         title: {
-          text: "Highmaps basic demo"
+          text: "World map with sample data"
         },
         subtitle: {
           text:
@@ -48,9 +70,11 @@ export default {
         },
         tooltip: {
           formatter: function() {
+            const inner = this;
             window.Shiny.onInputChange("country", this.point["name"]);
             window.Shiny.addCustomMessageHandler("countrydata", function(data) {
               ref.$store.commit("updateLineDate", data);
+              ref.$store.commit("updateCountry", inner.point["name"]);
             });
             return this.point.name;
           }
@@ -63,7 +87,7 @@ export default {
             name: "Random data",
             states: {
               hover: {
-                color: "green"
+                color: "#229695"
               }
             },
             dataLabels: {
@@ -293,3 +317,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+#worldmap_div {
+  padding: 10px 10px;
+}
+</style>

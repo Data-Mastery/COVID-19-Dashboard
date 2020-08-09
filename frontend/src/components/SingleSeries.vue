@@ -1,6 +1,6 @@
 <template>
   <div>
-    <highcharts v-if="isMounted" :options="chartData"></highcharts>
+    <highcharts :options="chartData" v-if="this.$store.state.shrunk & this.isMounted"></highcharts>
   </div>
 </template>
 
@@ -11,39 +11,39 @@ export default {
   mounted() {
     this.isMounted = true;
   },
-  methods: {
-    changeArr: function() {
-      if (this.selectval === "fizz") {
-        this.$store.commit("updateLineDate", [10, 20, 30, 21, 19, 12]);
-      } else if (this.selectval === "bar") {
-        this.$store.commit(
-          "updateLineDate",
-          [10, 20, 30, 21, 19, 12].reverse()
-        );
-      } else {
-        this.$store.commit("updateLineDate", [7, 13, 20, 45, 19, 12]);
-      }
-    }
-  },
   data() {
     return {
-      selectval: [],
-      items: ["foo", "bar", "fizz", "buzz"],
       isMounted: false
     };
   },
   computed: {
-    ...mapState(["lineData"]),
+    ...mapState(["lineData", "country"]),
     chartData() {
       return {
         chart: {
-          type: this.type
+          type: "column"
+        },
+        title: {
+          text: `Overall cases for ${this.country}: <strong>${Math.max(
+            ...this.lineData["data"]
+          )}</strong>`
+        },
+        yAxis: {
+          title: {
+            text: "Total Cases"
+          }
+        },
+        xAxis: {
+          categories: this.lineData["columns"]
+        },
+        legend: {
+          enabled: false
         },
         series: [
           {
-            data: this.lineData,
-            name: "Test Series",
-            color: this.color
+            data: this.lineData["data"],
+            name: this.country,
+            color: "#229695"
           }
         ]
       };

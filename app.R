@@ -1,5 +1,25 @@
 library(shiny)
 library(dplyr)
+library(tidyr)
+library(data.table)
+
+df <- data.table::fread("./COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv")
+
+globalcolnames <- colnames(df)[5:length(colnames(df))]
+
+
+df <- df %>%
+  select(-c(`Province/State`, Lat, Long)) %>%
+  group_by(`Country/Region`) %>%
+  summarise_all(list(sum)) %>%
+  t() %>%
+  as.data.frame()
+
+colnames(df) <- df[1, ]
+df <- df[-1, ]
+df <- data.frame(lapply(df, as.numeric))
+
+
 
 server <- function(input, output, session) {
    histogramData <- reactive({
@@ -7,16 +27,19 @@ server <- function(input, output, session) {
     req(input$country)
     print(input$country)
      
-    df <- data.frame(a = c(1,2,3,4,5,6,7),
-                     b = c(5,6,20,10,30,28,20),
-                     c = c(4,20,3,5,20,10,42)
-                     ) 
-    if(input$country == "Australia") {
-      res <- df$a
+    
+    if(input$country %in% colnames(df)) {
+      df <- data.frame(
+        columns = globalcolnames,
+        data = df[, input$country]
+      )
+      print(df)
+      return(df)
+      
     } else {
-      res <- df$b
-    }
-    return(res)
+      
+    }  
+    
    })
    
    observe({

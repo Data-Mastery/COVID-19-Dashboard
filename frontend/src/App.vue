@@ -10,14 +10,6 @@
             <v-list-item-title>Dashboard</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link>
-          <v-list-item-action>
-            <v-icon>mdi-cog</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Settings</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -32,10 +24,11 @@
 
     <v-main>
       <v-container fluid>
+        <v-row align="center" justify="center">
+          <h2>Example for a VueJS Frontend with a R-Shiny Backend Server</h2>
+        </v-row>
         <v-row>
-          <v-col cols="12" sm="9">
-            <worldmap></worldmap>
-          </v-col>
+          <worldmap></worldmap>
           <v-col cols="12" sm="3">
             <overviewtable></overviewtable>
           </v-col>
@@ -56,6 +49,7 @@
 import WorldMap from "./components/WorldMap";
 import OverviewTable from "./components/OverviewTable";
 import SingleSeries from "./components/SingleSeries";
+import { mapState } from "vuex";
 
 export default {
   props: {
@@ -66,7 +60,13 @@ export default {
     overviewtable: OverviewTable,
     singleseries: SingleSeries
   },
+  computed: {
+    ...mapState({
+      lineData: state => state.lineData.data.length
+    })
+  },
   data: () => ({
+    dynamicCol: 12,
     drawer: null
   }),
   created() {
@@ -75,4 +75,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
